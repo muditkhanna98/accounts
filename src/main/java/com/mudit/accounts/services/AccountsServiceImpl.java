@@ -1,10 +1,12 @@
 package com.mudit.accounts.services;
 
 import com.mudit.accounts.constants.AccountsConstants;
+import com.mudit.accounts.dtos.AccountsDto;
 import com.mudit.accounts.dtos.CustomerDto;
 import com.mudit.accounts.entities.Accounts;
 import com.mudit.accounts.entities.Customer;
 import com.mudit.accounts.exceptions.CustomerAlreadyExistsException;
+import com.mudit.accounts.exceptions.ResourceNotFoundException;
 import com.mudit.accounts.mappers.AccountsStructMapper;
 import com.mudit.accounts.mappers.CustomerStructMapper;
 import com.mudit.accounts.repositories.AccountsRepository;
@@ -37,6 +39,22 @@ public class AccountsServiceImpl implements IAccountsService {
             Accounts account = createNewAccount(savedCustomer);
 
             accountsRepository.save(account);
+        }
+    }
+
+    @Override
+    public CustomerDto fetchAccountDetails(String mobileNumber) {
+        Customer customer = customerRepository.findByMobileNumber(mobileNumber).orElse(null);
+        if (customer == null) {
+            throw new ResourceNotFoundException("Customer not found");
+        } else {
+            Accounts account = accountsRepository.findByCustomerId(customer.getCustomerId()).orElse(null);
+            if (account == null) {
+                throw new ResourceNotFoundException("Account not found");
+            }
+
+            AccountsDto accountsDto = accountsStructMapper.toAccountsDto(account);
+            return customerStructMapper.toCustomerDto(customer, accountsDto);
         }
     }
 
