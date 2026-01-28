@@ -4,7 +4,7 @@ import com.mudit.accounts.dtos.AccountsDto;
 import com.mudit.accounts.dtos.CustomerDto;
 import com.mudit.accounts.entities.Customer;
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
 
 @Mapper(componentModel = "spring")
 public interface CustomerStructMapper {
@@ -12,6 +12,7 @@ public interface CustomerStructMapper {
 
     CustomerDto toCustomerDto(Customer customer);
 
-    // Combine customer + accounts into response
     CustomerDto toCustomerDto(Customer customer, AccountsDto accountsDto);
+
+    void update(CustomerDto customerDto, @MappingTarget Customer customer);
 }
