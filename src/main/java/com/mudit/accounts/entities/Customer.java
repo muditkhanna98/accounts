@@ -26,4 +26,13 @@ public class Customer extends BaseEntity {
     @Column(name = "mobile_number")
     private String mobileNumber;
 
+    @Override
+    public String toString() {
+        return "Customer{" +
+                "customerId=" + customerId +
+                ", name='" + name + '\'' +
+                ", email='" + email + '\'' +
+                ", mobileNumber='" + mobileNumber + '\'' +
+                '}';
+    }
 }
