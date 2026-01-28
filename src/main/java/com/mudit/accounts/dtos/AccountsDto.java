@@ -8,7 +8,6 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 public class AccountsDto {
-
     private Long accountNumber;
 
     private String accountType;

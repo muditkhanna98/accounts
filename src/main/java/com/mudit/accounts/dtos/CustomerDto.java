@@ -8,7 +8,6 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 public class CustomerDto {
-
     private String name;
 
     private String email;

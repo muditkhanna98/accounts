@@ -11,6 +11,5 @@ public class ResponseDto {
 
     private String statusCode;
 
-
     private String statusMsg;
 }
