@@ -4,19 +4,22 @@ import com.mudit.accounts.constants.AccountsConstants;
 import com.mudit.accounts.dtos.CustomerDto;
 import com.mudit.accounts.dtos.ResponseDto;
 import com.mudit.accounts.services.AccountsServiceImpl;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api")
 @AllArgsConstructor
+@Validated
 public class AccountsController {
     private final AccountsServiceImpl accountsServiceImpl;
 
     @PostMapping("/create")
-    public ResponseEntity<ResponseDto> createAccount(@RequestBody CustomerDto customerDto) {
+    public ResponseEntity<ResponseDto> createAccount(@Valid @RequestBody CustomerDto customerDto) {
         accountsServiceImpl.createAccount(customerDto);
 
         return ResponseEntity
@@ -32,7 +35,7 @@ public class AccountsController {
     }
 
     @PutMapping("/update")
-    public ResponseEntity<ResponseDto> updateAccount(@RequestBody CustomerDto customerDto) {
+    public ResponseEntity<ResponseDto> updateAccount(@Valid @RequestBody CustomerDto customerDto) {
         boolean isUpdated = accountsServiceImpl.updateAccount(customerDto);
 
         if (isUpdated) {
