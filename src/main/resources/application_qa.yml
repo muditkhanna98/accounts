@@ -1,7 +1,0 @@
-spring:
-  config:
-    activate:
-      on-profile:"qa"
-
-accounts:
-  environment: qa
