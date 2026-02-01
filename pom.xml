@@ -139,6 +139,9 @@
                             <artifactId>lombok</artifactId>
                         </exclude>
                     </excludes>
+                    <image>
+                        <name>muditkhanna98/${project.artifactId}:v1.0.0</name>
+                    </image>
                 </configuration>
             </plugin>
         </plugins>
