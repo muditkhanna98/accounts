@@ -1,22 +1,4 @@
 services:
-  accountsdb:
-    image: mysql
-    container_name: accountsdb
-    ports:
-      - "3306:3306"
-    healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
-      timeout: 10s
-      retries: 10
-      interval: 10s
-      start_period: 10s
-
-    environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: accountsdb
-    networks:
-      - mudit-network
-
   rabbit:
     image: rabbitmq:4-management
     hostname: rabbitmq
@@ -63,17 +45,14 @@ services:
     depends_on:
       rabbit:
         condition: service_healthy
-      accountsdb:
-        condition: service_healthy
     deploy:
       resources:
         limits:
           memory: 700m
     environment:
       SPRING_APPLICATION_NAME: accounts
-      SPRING_DATASOURCE_URL: "jdbc:mysql://accountsdb:3306/accountsdb"
       SPRING_RABBITMQ_HOST: "rabbit"
-      SPRING_PROFILES_ACTIVE: default
+      SPRING_PROFILES_ACTIVE: prod
       SPRING_CONFIG_IMPORT: "configserver:http://config-server:8071/"
     networks:
       - mudit-network
