@@ -43,8 +43,6 @@ services:
     ports:
       - "8080:8080"
     depends_on:
-      config-server:
-        condition: service_healthy
       rabbit:
         condition: service_healthy
     deploy:
