@@ -1,0 +1,66 @@
+services:
+  rabbit:
+    image: rabbitmq:4-management
+    hostname: rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 5s
+    networks:
+      - mudit-network
+
+  config-server:
+    image: muditkhanna98/config-server:v1.0.0
+    container_name: config-server-ms
+    ports:
+      - "8071:8071"
+    depends_on:
+      rabbit:
+        condition: service_healthy
+    deploy:
+      resources:
+        limits:
+          memory: 700m
+    environment:
+      SPRING_RABBITMQ_HOST: "rabbit"
+    healthcheck:
+      test: "curl --fail --silent http://config-server:8071/actuator/health | grep UP || exit 1"
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+    networks:
+      - mudit-network
+
+  accounts:
+    image: muditkhanna98/accounts:v1.0.0
+    container_name: accounts-ms
+    ports:
+      - "8080:8080"
+    depends_on:
+      config-server:
+        condition: service_healthy
+      rabbit:
+        condition: service_healthy
+    deploy:
+      resources:
+        limits:
+          memory: 700m
+    environment:
+      SPRING_APPLICATION_NAME: accounts
+      SPRING_RABBITMQ_HOST: "rabbit"
+      SPRING_PROFILES_ACTIVE: default
+      SPRING_CONFIG_IMPORT: "configserver:http://config-server:8071/"
+    networks:
+      - mudit-network
+
+networks:
+  mudit-network:
+    driver: bridge
+    ipam:
+      driver: default
