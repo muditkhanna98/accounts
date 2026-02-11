@@ -5,7 +5,7 @@ import com.mudit.accounts.dtos.CustomerDto;
 import com.mudit.accounts.dtos.ResponseDto;
 import com.mudit.accounts.services.AccountsServiceImpl;
 import jakarta.validation.Valid;
-import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -13,10 +13,17 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api")
-@AllArgsConstructor
 @Validated
 public class AccountsController {
     private final AccountsServiceImpl accountsServiceImpl;
+
+
+    public AccountsController(AccountsServiceImpl accountsServiceImpl) {
+        this.accountsServiceImpl = accountsServiceImpl;
+    }
+
+    @Value("${build.version}")
+    private String buildVersion;
 
     @PostMapping("/create")
     public ResponseEntity<ResponseDto> createAccount(@Valid @RequestBody CustomerDto customerDto) {
@@ -62,6 +69,13 @@ public class AccountsController {
                     .status(HttpStatus.EXPECTATION_FAILED)
                     .body(new ResponseDto(AccountsConstants.STATUS_417, AccountsConstants.MESSAGE_417_DELETE));
         }
+    }
+
+    @GetMapping("/build-info")
+    public ResponseEntity<String> getBuildInfo() {
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(buildVersion);
     }
 
 }
