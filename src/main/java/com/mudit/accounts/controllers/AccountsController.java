@@ -1,10 +1,12 @@
 package com.mudit.accounts.controllers;
 
 import com.mudit.accounts.constants.AccountsConstants;
+import com.mudit.accounts.dtos.AccountsContactInfoDto;
 import com.mudit.accounts.dtos.CustomerDto;
 import com.mudit.accounts.dtos.ResponseDto;
 import com.mudit.accounts.services.AccountsServiceImpl;
 import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
@@ -27,6 +29,9 @@ public class AccountsController {
     private String buildVersion;
 
     private Environment environment;
+
+    @Autowired
+    private AccountsContactInfoDto accountsContactInfoDto;
 
     @PostMapping("/create")
     public ResponseEntity<ResponseDto> createAccount(@Valid @RequestBody CustomerDto customerDto) {
@@ -79,6 +84,13 @@ public class AccountsController {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(buildVersion);
+    }
+
+    @GetMapping("/contact-info")
+    public ResponseEntity<AccountsContactInfoDto> getContactInfo() {
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(accountsContactInfoDto);
     }
 
     @GetMapping("/java-version")
