@@ -17,7 +17,26 @@ spring:
     init:
       mode: always
 management:
+  info:
+    env:
+      enabled: true
   endpoints:
     web:
       exposure:
         include: "*"
+  endpoint:
+    shutdown:
+      access: unrestricted
+eureka:
+  instance:
+    prefer-ip-address: true
+  client:
+    fetch-registry: false
+    register-with-eureka: true
+    service-url:
+      defaultZone: http://localhost:8070/eureka/
+info:
+  app:
+    name: "accounts"
+    description: "Accounts microservice"
+    version: "1.0"
