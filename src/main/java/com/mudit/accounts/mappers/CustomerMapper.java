@@ -1,5 +1,6 @@
 package com.mudit.accounts.mappers;
 
+import com.mudit.accounts.dtos.CustomerDetailsDto;
 import com.mudit.accounts.dtos.CustomerDto;
 import com.mudit.accounts.entities.Customer;
 
@@ -16,5 +17,12 @@ public class CustomerMapper {
         customer.setEmail(customerDto.getEmail());
         customer.setMobileNumber(customerDto.getMobileNumber());
         return customer;
+    }
+
+    public static CustomerDetailsDto mapToCustomerDetailsDto(Customer customer, CustomerDetailsDto customerDetailsDto) {
+        customerDetailsDto.setName(customer.getName());
+        customerDetailsDto.setEmail(customer.getEmail());
+        customerDetailsDto.setMobileNumber(customer.getMobileNumber());
+        return customerDetailsDto;
     }
 }
