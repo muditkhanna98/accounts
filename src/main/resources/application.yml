@@ -20,6 +20,11 @@ management:
   info:
     env:
       enabled: true
+  health:
+    readinessstate:
+      enabled: true
+    livenessstate:
+      enabled: true
   endpoints:
     web:
       exposure:
@@ -27,6 +32,9 @@ management:
   endpoint:
     shutdown:
       access: unrestricted
+    health:
+      probes:
+        enabled: true
 eureka:
   instance:
     prefer-ip-address: true
