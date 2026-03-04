@@ -5,6 +5,7 @@ import com.mudit.accounts.dtos.AccountsContactInfoDto;
 import com.mudit.accounts.dtos.CustomerDto;
 import com.mudit.accounts.dtos.ResponseDto;
 import com.mudit.accounts.services.AccountsServiceImpl;
+import io.github.resilience4j.retry.annotation.Retry;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -79,11 +80,19 @@ public class AccountsController {
         }
     }
 
+    @Retry(name = "getBuildInfo", fallbackMethod = "getBuildInfoFallback")
     @GetMapping("/build-info")
     public ResponseEntity<String> getBuildInfo() {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(buildVersion);
+    }
+
+    @GetMapping("/build-info")
+    public ResponseEntity<String> getBuildInfoFallback(Throwable throwable) {
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body("0.9");
     }
 
     @GetMapping("/contact-info")
