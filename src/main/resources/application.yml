@@ -16,6 +16,10 @@ spring:
   sql:
     init:
       mode: always
+  cloud:
+    openfeign:
+      circuitbreaker:
+        enabled: true
 management:
   info:
     env:
@@ -48,3 +52,10 @@ info:
     name: "accounts"
     description: "Accounts microservice"
     version: "1.0"
+resilience4j.circuitbreaker:
+  configs:
+    default:
+      slidingWindowSize: 10 #how many requests to monitor before changing to closed or open
+      permittedNumberOfCallsInHalfOpenState: 2
+      failureRateThreshold: 50
+      waitDurationInOpenState: 10000
