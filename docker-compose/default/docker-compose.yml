@@ -1,28 +1,28 @@
 services:
-#  eurekaserver:
-#    image: muditkhanna98/eureka:v1.0
-#    container_name: eureka-server-ms
-#    ports:
-#      - "8070:8070"
-#    healthcheck:
-#      test: "curl --fail --silent localhost:8070/actuator/health/readiness | grep UP || exit 1"
-#      interval: 10s
-#      timeout: 5s
-#      retries: 10
-#      start_period: 10s
-#    deploy:
-#      resources:
-#        limits:
-#          memory: 700m
-#    depends_on:
-#      config-server:
-#        condition: service_healthy
-#    networks:
-#      - mudit-network
-#    environment:
-#      SPRING_CONFIG_IMPORT: "configserver:http://config-server:8071"
-#      SPRING_PROFILES_ACTIVE: default
-#      SPRING_APPLICATION_NAME: eurekaserver
+  eurekaserver:
+    image: muditkhanna98/eureka:v1.0
+    container_name: eureka-server-ms
+    ports:
+      - "8070:8070"
+    healthcheck:
+      test: "curl --fail --silent localhost:8070/actuator/health/readiness | grep UP || exit 1"
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+    deploy:
+      resources:
+        limits:
+          memory: 700m
+    depends_on:
+      config-server:
+        condition: service_healthy
+    networks:
+      - mudit-network
+    environment:
+      SPRING_CONFIG_IMPORT: "configserver:http://config-server:8071"
+      SPRING_PROFILES_ACTIVE: default
+      SPRING_APPLICATION_NAME: eurekaserver
 
   accountsdb:
     image: mysql
@@ -75,146 +75,166 @@ services:
     networks:
       - mudit-network
 
-#  config-server:
-#    image: muditkhanna98/config-server:v1.0
-#    container_name: config-server-ms
-#    ports:
-#      - "8071:8071"
-#    healthcheck:
-#      test: "curl --fail --silent localhost:8071/actuator/health/readiness | grep UP || exit 1"
-#      interval: 10s
-#      timeout: 5s
-#      retries: 10
-#      start_period: 10s
-#    deploy:
-#      resources:
-#        limits:
-#          memory: 700m
-#    networks:
-#      - mudit-network
-#
-#  accounts:
-#    image: muditkhanna98/accounts:v1.0
-#    container_name: accounts-ms
-#    ports:
-#      - "8080:8080"
-#    healthcheck:
-#      test: "curl --fail --silent localhost:8080/actuator/health/readiness | grep UP || exit 1"
-#      interval: 10s
-#      timeout: 5s
-#      retries: 10
-#      start_period: 10s
-#    depends_on:
-#      config-server:
-#        condition: service_healthy
-#      accountsdb:
-#        condition: service_healthy
-#      eurekaserver:
-#        condition: service_healthy
-#    deploy:
-#      resources:
-#        limits:
-#          memory: 700m
-#    networks:
-#      - mudit-network
-#    environment:
-#      SPRING_CONFIG_IMPORT: "configserver:http://config-server:8071"
-#      SPRING_PROFILES_ACTIVE: default
-#      SPRING_APPLICATION_NAME: accounts
-#      SPRING_DATASOURCE_USERNAME: root
-#      SPRING_DATASOURCE_PASSWORD: root
-#      SPRING_DATASOURCE_URL: "jdbc:mysql://accountsdb:3306/accountsdb"
-#      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eurekaserver:8070/eureka/
-#
-#  loans:
-#    image: muditkhanna98/loans:v1.0
-#    container_name: loans-ms
-#    ports:
-#      - "8090:8090"
-#    healthcheck:
-#      test: "curl --fail --silent localhost:8090/actuator/health/readiness | grep UP || exit 1"
-#      interval: 10s
-#      timeout: 5s
-#      retries: 10
-#      start_period: 10s
-#    depends_on:
-#      config-server:
-#        condition: service_healthy
-#      loansdb:
-#        condition: service_healthy
-#      eurekaserver:
-#        condition: service_healthy
-#    deploy:
-#      resources:
-#        limits:
-#          memory: 700m
-#    networks:
-#      - mudit-network
-#    environment:
-#      SPRING_CONFIG_IMPORT: "configserver:http://config-server:8071"
-#      SPRING_PROFILES_ACTIVE: default
-#      SPRING_APPLICATION_NAME: loans
-#      SPRING_DATASOURCE_USERNAME: root
-#      SPRING_DATASOURCE_PASSWORD: root
-#      SPRING_DATASOURCE_URL: "jdbc:mysql://loansdb:3306/loansdb"
-#      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eurekaserver:8070/eureka/
-#
-#  cards:
-#    image: muditkhanna98/cards:v1.0
-#    container_name: cards-ms
-#    ports:
-#      - "9000:9000"
-#    healthcheck:
-#      test: "curl --fail --silent localhost:9000/actuator/health/readiness | grep UP || exit 1"
-#      interval: 10s
-#      timeout: 5s
-#      retries: 10
-#      start_period: 10s
-#    depends_on:
-#      config-server:
-#        condition: service_healthy
-#      cardsdb:
-#        condition: service_healthy
-#      eurekaserver:
-#        condition: service_healthy
-#    deploy:
-#      resources:
-#        limits:
-#          memory: 700m
-#    networks:
-#      - mudit-network
-#    environment:
-#      SPRING_CONFIG_IMPORT: "configserver:http://config-server:8071"
-#      SPRING_PROFILES_ACTIVE: default
-#      SPRING_APPLICATION_NAME: cards
-#      SPRING_DATASOURCE_USERNAME: root
-#      SPRING_DATASOURCE_PASSWORD: root
-#      SPRING_DATASOURCE_URL: "jdbc:mysql://cardsdb:3306/cardsdb"
-#      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eurekaserver:8070/eureka/
-#
-#  gatewayserver:
-#    image: muditkhanna98/gatewayserver:v1.0
-#    container_name: gatewayserver-ms
-#    ports:
-#      - "8072:8072"
-#    depends_on:
-#      accounts:
-#        condition: service_healthy
-#      loans:
-#        condition: service_healthy
-#      cards:
-#        condition: service_healthy
-#    deploy:
-#      resources:
-#        limits:
-#          memory: 700m
-#    networks:
-#      - mudit-network
-#    environment:
-#      SPRING_CONFIG_IMPORT: "configserver:http://config-server:8071"
-#      SPRING_PROFILES_ACTIVE: default
-#      SPRING_APPLICATION_NAME: gatewayserver
-#      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eurekaserver:8070/eureka/
+  redis:
+    image: redis
+    container_name: redis
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: [ "CMD-SHELL", "redis-cli ping | grep PONG" ]
+      timeout: 10s
+      retries: 10
+      interval: 10s
+      start_period: 10s
+    networks:
+      - mudit-network
+
+  config-server:
+    image: muditkhanna98/config-server:v1.0
+    container_name: config-server-ms
+    ports:
+      - "8071:8071"
+    healthcheck:
+      test: "curl --fail --silent localhost:8071/actuator/health/readiness | grep UP || exit 1"
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+    deploy:
+      resources:
+        limits:
+          memory: 700m
+    networks:
+      - mudit-network
+
+  accounts:
+    image: muditkhanna98/accounts:v1.0
+    container_name: accounts-ms
+    ports:
+      - "8080:8080"
+    healthcheck:
+      test: "curl --fail --silent localhost:8080/actuator/health/readiness | grep UP || exit 1"
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+    depends_on:
+      config-server:
+        condition: service_healthy
+      accountsdb:
+        condition: service_healthy
+      eurekaserver:
+        condition: service_healthy
+    deploy:
+      resources:
+        limits:
+          memory: 700m
+    networks:
+      - mudit-network
+    environment:
+      SPRING_CONFIG_IMPORT: "configserver:http://config-server:8071"
+      SPRING_PROFILES_ACTIVE: default
+      SPRING_APPLICATION_NAME: accounts
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: root
+      SPRING_DATASOURCE_URL: "jdbc:mysql://accountsdb:3306/accountsdb"
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eurekaserver:8070/eureka/
+
+  loans:
+    image: muditkhanna98/loans:v1.0
+    container_name: loans-ms
+    ports:
+      - "8090:8090"
+    healthcheck:
+      test: "curl --fail --silent localhost:8090/actuator/health/readiness | grep UP || exit 1"
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+    depends_on:
+      config-server:
+        condition: service_healthy
+      loansdb:
+        condition: service_healthy
+      eurekaserver:
+        condition: service_healthy
+    deploy:
+      resources:
+        limits:
+          memory: 700m
+    networks:
+      - mudit-network
+    environment:
+      SPRING_CONFIG_IMPORT: "configserver:http://config-server:8071"
+      SPRING_PROFILES_ACTIVE: default
+      SPRING_APPLICATION_NAME: loans
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: root
+      SPRING_DATASOURCE_URL: "jdbc:mysql://loansdb:3306/loansdb"
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eurekaserver:8070/eureka/
+
+  cards:
+    image: muditkhanna98/cards:v1.0
+    container_name: cards-ms
+    ports:
+      - "9000:9000"
+    healthcheck:
+      test: "curl --fail --silent localhost:9000/actuator/health/readiness | grep UP || exit 1"
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+    depends_on:
+      config-server:
+        condition: service_healthy
+      cardsdb:
+        condition: service_healthy
+      eurekaserver:
+        condition: service_healthy
+    deploy:
+      resources:
+        limits:
+          memory: 700m
+    networks:
+      - mudit-network
+    environment:
+      SPRING_CONFIG_IMPORT: "configserver:http://config-server:8071"
+      SPRING_PROFILES_ACTIVE: default
+      SPRING_APPLICATION_NAME: cards
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: root
+      SPRING_DATASOURCE_URL: "jdbc:mysql://cardsdb:3306/cardsdb"
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eurekaserver:8070/eureka/
+
+  gatewayserver:
+    image: muditkhanna98/gatewayserver:v1.0
+    container_name: gatewayserver-ms
+    ports:
+      - "8072:8072"
+    depends_on:
+      accounts:
+        condition: service_healthy
+      loans:
+        condition: service_healthy
+      cards:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    deploy:
+      resources:
+        limits:
+          memory: 700m
+    networks:
+      - mudit-network
+    environment:
+      SPRING_CONFIG_IMPORT: "configserver:http://config-server:8071"
+      SPRING_PROFILES_ACTIVE: default
+      SPRING_APPLICATION_NAME: gatewayserver
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eurekaserver:8070/eureka/
+      SPRING_DATA_REDIS_CONNECT-TIMEOUT: 2s
+      SPRING_DATA_REDIS_HOST: redis
+      SPRING_DATA_REDIS_PORT: 6379
+      SPRING_DATA_REDIS_TIMEOUT: 1s
 
 networks:
   mudit-network:
