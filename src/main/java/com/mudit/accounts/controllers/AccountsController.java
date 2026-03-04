@@ -88,7 +88,6 @@ public class AccountsController {
                 .body(buildVersion);
     }
 
-    @GetMapping("/build-info")
     public ResponseEntity<String> getBuildInfoFallback(Throwable throwable) {
         return ResponseEntity
                 .status(HttpStatus.OK)
