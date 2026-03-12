@@ -2,6 +2,7 @@ package com.mudit.accounts.services;
 
 import com.mudit.accounts.constants.AccountsConstants;
 import com.mudit.accounts.dtos.AccountsDto;
+import com.mudit.accounts.dtos.AccountsMsgDto;
 import com.mudit.accounts.dtos.CustomerDto;
 import com.mudit.accounts.entities.Accounts;
 import com.mudit.accounts.entities.Customer;
@@ -12,6 +13,9 @@ import com.mudit.accounts.mappers.CustomerStructMapper;
 import com.mudit.accounts.repositories.AccountsRepository;
 import com.mudit.accounts.repositories.CustomerRepository;
 import lombok.AllArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.cloud.stream.function.StreamBridge;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -24,6 +28,8 @@ public class AccountsServiceImpl implements IAccountsService {
     private final CustomerRepository customerRepository;
     private final AccountsStructMapper accountsStructMapper;
     private final CustomerStructMapper customerStructMapper;
+    private static final Logger log = LoggerFactory.getLogger(AccountsServiceImpl.class);
+    private final StreamBridge streamBridge;
 
     @Override
     public void createAccount(CustomerDto customerDto) {
@@ -39,7 +45,16 @@ public class AccountsServiceImpl implements IAccountsService {
             Accounts account = createNewAccount(savedCustomer);
 
             accountsRepository.save(account);
+            sendCommunication(account, savedCustomer);
         }
+    }
+
+    private void sendCommunication(Accounts account, Customer customer) {
+        var accountsMsgDto = new AccountsMsgDto(account.getAccountNumber(), customer.getName(),
+                customer.getEmail(), customer.getMobileNumber());
+        log.info("Sending Communication request for the details: {}", accountsMsgDto);
+        var result = streamBridge.send("sendCommunication-out-0", accountsMsgDto);
+        log.info("Is the Communication request successfully triggered ? : {}", result);
     }
 
     @Override
